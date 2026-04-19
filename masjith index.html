@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hilru Jumma Masjith Neithal Nager - Muthur — Family DB</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans,system-ui,sans-serif);background:var(--color-background-tertiary,#f3f7f4);color:var(--color-text-primary,#1a1a1a);min-height:100vh}
+
+/* ===== LOGIN PAGE ===== */
+#login-screen{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;background:linear-gradient(135deg,#f4ebf5 0%,#2d6a4f 60%,#e8f1ec 100%);
+  padding:20px;
+}
+.login-card{
+  background:rgb(239, 243, 236);border-radius:20px;padding:36px 32px;width:100%;max-width:380px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);
+}
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo h2{font-size:18px;font-weight:600;color:#1a1a1a}
+.login-logo p{font-size:12px;color:#666;margin-top:3px}
+.login-divider{border:none;border-top:1px solid #eee;margin:20px 0}
+.login-label{font-size:12px;font-weight:500;color:#444;display:block;margin-bottom:5px}
+.login-input{
+  width:100%;padding:10px 13px;border:1px solid #ddd;border-radius:10px;
+  font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;
+  font-family:inherit;background:#fafafa;
+}
+.login-input:focus{border-color:#1a472a;box-shadow:0 0 0 3px rgba(26,71,42,0.1);background:#fff}
+.login-field{margin-bottom:14px}
+.login-btn{
+  width:100%;padding:11px;background:#1a472a;color:white;border:none;
+  border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;
+  transition:background 0.2s,transform 0.1s;margin-top:6px;font-family:inherit;
+}
+.login-btn:hover{background:#153d23}
+.login-btn:active{transform:scale(0.99)}
+.login-btn:disabled{background:#888;cursor:not-allowed}
+.login-error{
+  background:#fde8e8;color:#c0392b;border-radius:8px;padding:9px 12px;
+  font-size:12px;margin-top:10px;display:none;
+}
+.login-footer{text-align:center;font-size:11px;color:#999;margin-top:18px}
+.login-loading{display:none;text-align:center;padding:20px;color:#666;font-size:13px}
+.lspinner{display:inline-block;width:18px;height:18px;border:2px solid #d4edda;border-top-color:#1a472a;border-radius:50%;animation:spin 0.8s linear infinite;margin-right:6px;vertical-align:middle}
+
+/* ===== MAIN APP ===== */
+#app-screen{display:none}
+
+/* ===== USER BAR ===== */
+.user-bar{
+  background:rgba(153,153,125,0.774);border-top:1px solid rgba(255,255,255,0.1);
+  padding:6px 14px;display:flex;align-items:center;gap:8px;
+}
+.user-bar .ub-email{font-size:11px;opacity:0.75;flex:1}
+.user-bar .ub-name{font-size:12px;font-weight:500}
+.signout-btn{
+  background:rgba(240,9,9,0.966);border:none;color:white;
+  padding:6px 20px;border-radius:8px;font-size:14px;cursor:pointer;
+  transition:background 0.15s;font-family:inherit;
+}
+.signout-btn:hover{background:rgba(13,14,13,0.932)}
+
+.app-header{background:#eefaf2;color:rgb(16,36,4);padding:12px 16px;display:flex;align-items:center;gap:50px}
+.app-header .logo{width:100px;height:100px;background:rgba(255,255,255,0.15);border-radius:20px;display:flex;align-items:center;justify-content:left;font-size:17px;flex-shrink:50;gap:50px}
+.app-header h1{font-size:25px;font-weight:500}
+.app-header p{font-size:15px;opacity:0.75;margin-top:1px}
+.sync-dot{width:12px;height:12px;border-radius:50%;background:#4caf50;margin-left:auto;flex-shrink:0}
+.sync-dot.syncing{background:#14e01e;animation:pulse 1s infinite}
+.sync-dot.offline{background:#f1190a}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.nav-tabs{background:var(--color-background-primary,#ecf5ed);border-bottom:5px solid var(--color-border-tertiary,#070707);display:flex;overflow-x:auto}
+.nav-tab{padding:11px 14px;font-size:12px;font-weight:500;cursor:pointer;border-bottom:1px solid transparent;color:var(--color-text-secondary,#666);white-space:nowrap;transition:all 0.15s}
+.nav-tab.active{border-bottom-color:#96e676;color:#474e49}
+.content{padding:14px;max-width:860px;margin:0 auto;position:relative}
+.card{background:var(--color-background-primary,#fff);border:2px solid var(--color-border-tertiary,#0a0909);border-radius:12px;padding:14px;margin-bottom:12px}
+.card-title{font-size:20px;font-weight:500;color:#1a472a;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px}
+.fg{display:flex;flex-direction:column;gap:3px}
+.fg label{font-size:11px;color:var(--color-text-secondary,#666);font-weight:500}
+.fg input,.fg select,.fg textarea{padding:7px 9px;border:0.5px solid var(--color-border-secondary,#ccc);border-radius:8px;font-size:13px;background:var(--color-background-primary,#fff);color:var(--color-text-primary,#1a1a1a);outline:none;font-family:inherit}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#e6ece9;box-shadow:0 0 0 2px rgba(26,71,42,0.1)}
+.fg textarea{resize:vertical;min-height:56px}
+.fg.full{grid-column:1/-1}
+.member-row{background:var(--color-background-secondary,#edf1ed);border-radius:8px;padding:10px;margin-bottom:8px;position:relative}
+.member-row .rm{position:absolute;top:8px;right:8px;background:none;border:none;color:#c0392b;cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px}
+.member-row .rm:hover{background:#fde8e8}
+.ml{font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:7px}
+.btn{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:0.5px solid;transition:all 0.15s;font-family:inherit}
+.btn-p{background:#1a472a;color:white;border-color:#1a472a}
+.btn-p:hover{background:#153d23}
+.btn-s{background:transparent;color:#1a472a;border-color:#1a472a}
+.btn-s:hover{background:rgba(26,71,42,0.06)}
+.btn-d{background:transparent;color:#c0392b;border-color:#c0392b}
+.btn-d:hover{background:#24e92e}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.search-bar input{width:100%;padding:9px 13px;border:0.5px solid var(--color-border-secondary,#ccc);border-radius:8px;font-size:14px;background:var(--color-background-primary,#fff);color:var(--color-text-primary,#1a1a1a);outline:none;font-family:inherit;margin-bottom:14px}
+.search-bar input:focus{border-color:#1a472a}
+.fi{background:var(--color-background-primary,#fff);border:0.5px solid var(--color-border-tertiary);border-radius:10px;padding:12px 14px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:11px;transition:all 0.15s}
+.fi:hover{border-color:#1a472a}
+.av{border-radius:50%;background:#d4edda;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:#1a472a;flex-shrink:0}
+.fn{font-size:13px;font-weight:500}
+.fnic{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;margin-top:3px;gap:4px}
+.tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500}
+.tg{background:#d4edda;color:#1a472a}.ta{background:#fef3cd;color:#856404}
+.tb{background:#dbeafe;color:#1e40af}.tr{background:#fde8e8;color:#c0392b}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}
+.sc{background:var(--color-background-primary,#fff);border:0.5px solid var(--color-border-tertiary);border-radius:10px;padding:11px 13px}
+.sc .sn{font-size:22px;font-weight:500;color:#1a472a}
+.sc .sl{font-size:11px;color:var(--color-text-secondary);margin-top:1px}
+.empty{text-align:center;padding:36px 16px;color:var(--color-text-secondary)}
+.empty .ei{font-size:36px;margin-bottom:10px}
+.empty p{font-size:13px}
+.ph{background:#1a472a;color:white;border-radius:12px;padding:16px;margin-bottom:12px;display:flex;align-items:flex-start;gap:13px;flex-wrap:wrap}
+.ph h2{font-size:17px;font-weight:500}
+.ph p{font-size:12px;opacity:0.8;margin-top:2px}
+.ii{padding:7px 11px;border-radius:10px;background:var(--color-background-secondary,#faf4f4);margin-bottom:10px}
+.ii .il{font-size:10px;color:var(--color-text-secondary);font-weight:500;text-transform:uppercase;letter-spacing:0.3px}
+.ii .iv{font-size:13px;font-weight:500;margin-top:5px}
+.mc{background:var(--color-background-secondary,#f8f8f5);border-radius:8px;padding:9px 11px;margin-bottom:6px;display:flex;align-items:center;gap:9px}
+.mc .mn{font-size:13px;font-weight:500}
+.mc .md{font-size:11px;color:var(--color-text-secondary);margin-top:1px}
+.back-btn{display:flex;align-items:center;gap:5px;background:none;border:none;color:var(--color-text-secondary);cursor:pointer;font-size:13px;margin-bottom:10px;padding:3px 0;font-family:inherit}
+.back-btn:hover{color:var(--color-text-primary)}
+.rb{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500}
+.ry{background:#d4edda;color:#1a472a}.rn{background:rgba(255,255,255,0.15);color:white}
+.toast-msg{position:fixed;bottom:20px;right:20px;background:#1a472a;color:white;padding:9px 14px;border-radius:8px;font-size:12px;z-index:999;animation:sli 0.3s,fdo 0.3s 2.5s forwards;pointer-events:none}
+@keyframes sli{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fdo{to{opacity:0}}
+.page{display:none}.page.active{display:block}
+.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:7px}
+.loading-overlay{text-align:center;padding:40px;color:var(--color-text-secondary);font-size:13px}
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid #d4edda;border-top-color:#1a472a;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== CHECKBOX GRID ===== */
+.chk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px;margin-top:6px}
+.chk-item{display:flex;align-items:center;gap:7px;background:var(--color-background-secondary,#f0f4f0);border-radius:8px;padding:7px 10px;font-size:13px;cursor:pointer}
+.chk-item input[type=checkbox]{width:15px;height:15px;accent-color:#1a472a;flex-shrink:0}
+.section-label{font-size:11px;color:var(--color-text-secondary,#666);font-weight:500;margin-bottom:5px;margin-top:8px;display:block}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="licon"><img src="logo.png" width="180"></div>
+      <h2>Hilru Jumma Masjith Neithal Nager - Muthur</h2>
+      <p>Family Database — Staff Login</p>
+    </div>
+    <hr class="login-divider">
+    <div id="signin-form">
+      <div class="login-field">
+        <label class="login-label">Email address</label>
+        <input class="login-input" type="email" id="login-email" placeholder="admin@masjith.com" autocomplete="email"/>
+      </div>
+      <div class="login-field">
+        <label class="login-label">Password</label>
+        <input class="login-input" type="password" id="login-pass" placeholder="Enter your password" autocomplete="current-password"/>
+      </div>
+      <button class="login-btn" id="login-btn" onclick="doSignIn()">Sign In</button>
+      <div class="login-error" id="login-error"></div>
+    </div>
+    <div class="login-loading" id="login-loading">
+      <span class="lspinner"></span> Signing in...
+    </div>
+    <div class="login-footer">🔒 Authorised personnel only</div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP SCREEN ===== -->
+<div id="app-screen">
+  <div class="app-header">
+    <div class="logo"><img src="logo.png" width="150"></div>
+    <div>
+      <h1>Hilru Jumma Masjith Neitha Nager - Muthur</h1>
+      <p>Community welfare &amp; Data management</p>
+    </div>
+    <div class="sync-dot" id="sync-dot" title="Sync status"></div>
+  </div>
+  <div class="app-header" style="padding:10px 16px;background:#98bd98">
+    <div style="font-size:15px;opacity:0.75;flex:1" id="user-email-display"></div>
+    <button class="signout-btn" onclick="doSignOut()">Sign out</button>
+  </div>
+
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showTab('dashboard')">Dashboard</div>
+    <div class="nav-tab" onclick="showTab('search')">Search</div>
+    <div class="nav-tab" onclick="showTab('add')">Add Family</div>
+    <div class="nav-tab" onclick="showTab('aswesuma')">Aswesuma List</div>
+  </div>
+
+  <div class="content">
+    <div id="tab-dashboard" class="page active"><div class="loading-overlay"><div class="spinner"></div><br>Loading from Firebase...</div></div>
+    <div id="tab-search" class="page"></div>
+    <div id="tab-add" class="page"></div>
+    <div id="tab-aswesuma" class="page"></div>
+    <div id="tab-profile" class="page"></div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBbg4_VteWoigiHE25H_ZMIqZPwIXKiR38",
+  authDomain: "hilrujummamasjith.firebaseapp.com",
+  projectId: "hilrujummamasjith",
+  storageBucket: "hilrujummamasjith.firebasestorage.app",
+  messagingSenderId: "928041924086",
+  appId: "1:928041924086:web:369f6add2e5c13f571c3d7"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const COL = 'families';
+
+var DB = [];
+var editId = null;
+var memberCount = 0;
+var unsubscribeSnapshot = null;
+
+// ===== AUTH =====
+
+window.doSignIn = async function(){
+  var email = document.getElementById('login-email').value.trim();
+  var pass = document.getElementById('login-pass').value;
+  var errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+  if(!email || !pass){ errEl.textContent='Please enter email and password.'; errEl.style.display='block'; return; }
+  document.getElementById('signin-form').style.display='none';
+  document.getElementById('login-loading').style.display='block';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    document.getElementById('signin-form').style.display='block';
+    document.getElementById('login-loading').style.display='none';
+    var msg = 'Sign in failed. Please check your credentials.';
+    if(e.code==='auth/user-not-found'||e.code==='auth/wrong-password'||e.code==='auth/invalid-credential') msg='Incorrect email or password.';
+    else if(e.code==='auth/too-many-requests') msg='Too many failed attempts. Please try again later.';
+    else if(e.code==='auth/invalid-email') msg='Invalid email address.';
+    errEl.textContent = msg;
+    errEl.style.display = 'block';
+  }
+};
+
+window.doSignOut = async function(){
+  if(unsubscribeSnapshot){ unsubscribeSnapshot(); unsubscribeSnapshot=null; }
+  await signOut(auth);
+};
+
+document.getElementById('login-pass').addEventListener('keydown', function(e){ if(e.key==='Enter') window.doSignIn(); });
+document.getElementById('login-email').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('login-pass').focus(); });
+
+onAuthStateChanged(auth, function(user){
+  if(user){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app-screen').style.display='block';
+    document.getElementById('user-email-display').textContent='Signed in as: ' + user.email;
+    document.getElementById('signin-form').style.display='block';
+    document.getElementById('login-loading').style.display='none';
+    document.getElementById('login-error').style.display='none';
+    startSnapshot();
+  } else {
+    document.getElementById('login-screen').style.display='flex';
+    document.getElementById('app-screen').style.display='none';
+    DB = [];
+  }
+});
+
+function startSnapshot(){
+  if(unsubscribeSnapshot) unsubscribeSnapshot();
+  unsubscribeSnapshot = onSnapshot(
+    query(collection(db, COL), orderBy('addedAt','desc')),
+    function(snap){
+      DB = snap.docs.map(function(d){ return d.data(); });
+      setSyncDot('online');
+      var cur = document.querySelector('#app-screen .page.active');
+      if(cur && cur.id==='tab-dashboard') renderDash();
+      if(cur && cur.id==='tab-aswesuma') renderAswesuma();
+    },
+    function(err){ setSyncDot('offline'); console.log('Snapshot error:', err); }
+  );
+}
+
+// ===== HELPERS =====
+
+function setSyncDot(state){
+  var d=document.getElementById('sync-dot');if(!d)return;
+  d.className='sync-dot'+(state==='syncing'?' syncing':state==='offline'?' offline':'');
+  d.title=state==='syncing'?'Syncing...':state==='offline'?'Offline':'Connected to Firebase';
+}
+
+function ini(n){if(!n)return'?';var p=n.trim().split(' ');return p.length>1?(p[0][0]+p[p.length-1][0]).toUpperCase():n[0].toUpperCase()}
+
+function toast(msg){
+  var old=document.querySelector('.toast-msg');if(old)old.remove();
+  var t=document.createElement('div');t.className='toast-msg';t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(function(){if(t.parentNode)t.remove()},2800);
+}
+
+function showTab(tab,id){
+  document.querySelectorAll('.nav-tab').forEach(function(t,i){
+    t.classList.toggle('active',['dashboard','search','add','aswesuma'].indexOf(tab)===i);
+  });
+  document.querySelectorAll('#app-screen .page').forEach(function(p){p.classList.remove('active')});
+  if(tab==='profile'){
+    document.getElementById('tab-profile').classList.add('active');
+    renderProfile(id);
+  } else {
+    document.getElementById('tab-'+tab).classList.add('active');
+    if(tab==='dashboard')renderDash();
+    if(tab==='add'){editId=null;renderForm(null);}
+    if(tab==='aswesuma')renderAswesuma();
+    if(tab==='search')renderSearch('');
+  }
+}
+window.showTab=showTab;
+
+async function saveToFirebase(fam){
+  setSyncDot('syncing');
+  try{await setDoc(doc(db,COL,fam.id),fam);setSyncDot('online');return true;}
+  catch(e){setSyncDot('offline');toast('Saved locally — will sync when online');return false;}
+}
+
+async function deleteFromFirebase(id){
+  setSyncDot('syncing');
+  try{await deleteDoc(doc(db,COL,id));setSyncDot('online');}
+  catch(e){setSyncDot('offline');}
+}
+
+function fiHTML(f){
+  var mc=1+(f.members||[]).length;
+  return '<div class="fi" onclick="showTab(\'profile\',\''+f.id+'\')">'
+    +'<div class="av" style="width:42px;height:42px;font-size:15px">'+ini(f.headName)+'</div>'
+    +'<div style="flex:1"><div class="fn">'+(f.headName||'Unknown')+'</div>'
+    +'<div class="fnic">NIC: '+(f.nic||'-')+' &nbsp;·&nbsp; '+mc+' member'+(mc>1?'s':'')+'</div>'
+    +'<div class="tags">'
+    +(f.aswesuma?'<span class="tag tg">Ration eligible</span>':'')
+    +(f.income==='very-low'?'<span class="tag tr">Very low income</span>':'')
+    +(f.income==='low'?'<span class="tag ta">Low income</span>':'')
+    +(f.masjid?'<span class="tag tb">'+f.masjid+'</span>':'')
+    +'</div></div></div>';
+}
+
+function renderDash(){
+  var total=DB.length;
+  var mems=DB.reduce(function(s,f){return s+1+(f.members||[]).length},0);
+  var rat=DB.filter(function(f){return f.ration}).length;
+  var need=DB.filter(function(f){return f.income==='low'||f.income==='very-low'}).length;
+  var recent=DB.slice(0,8);
+  document.getElementById('tab-dashboard').innerHTML=
+    '<div class="stats-row">'
+    +'<div class="sc"><div class="sn">'+total+'</div><div class="sl">Families</div></div>'
+    +'<div class="sc"><div class="sn">'+mems+'</div><div class="sl">Total members</div></div>'
+    +'<div class="sc"><div class="sn">'+rat+'</div><div class="sl">Aswesuma eligible</div></div>'
+    +'<div class="sc"><div class="sn">'+need+'</div><div class="sl">Low income</div></div>'
+    +'</div>'
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">👨‍👩‍👧‍👦</span> Recent families</div>'
+    +(recent.length?recent.map(fiHTML).join(''):'<div class="empty"><div class="ei">🕌</div><p>No families yet. Go to Add Family to get started.</p></div>')
+    +'</div>';
+}
+
+function renderSearch(q){
+  var results=q.trim()?DB.filter(function(f){
+    var s=q.toLowerCase();
+    return (f.nic||'').toLowerCase().includes(s)||(f.headName||'').toLowerCase().includes(s)
+      ||(f.spouseName||'').toLowerCase().includes(s)||(f.address||'').toLowerCase().includes(s)
+      ||(f.members||[]).some(function(m){return (m.name||'').toLowerCase().includes(s)||(m.nic||'').toLowerCase().includes(s)});
+  }):[];
+  document.getElementById('tab-search').innerHTML=
+    '<div class="search-bar"><input type="text" id="srch" placeholder="Search by NIC, name or address..." value="'+q+'" oninput="window.renderSearch(this.value)"/></div>'
+    +(!q.trim()?'<div class="empty"><div class="ei">🔍</div><p>Enter NIC number or name to search</p></div>'
+      :results.length?'<p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:10px">'+results.length+' result'+(results.length>1?'s':'')+' found</p>'+results.map(fiHTML).join('')
+      :'<div class="empty"><div class="ei">😕</div><p>No families found</p></div>');
+  var si=document.getElementById('srch');
+  if(si){si.focus();si.setSelectionRange(si.value.length,si.value.length);}
+}
+window.renderSearch=renderSearch;
+
+var eduOpts=['','Primary','Secondary (O/L)','Advanced Level (A/L)','Diploma','Degree','Postgraduate'];
+function selOpts(opts,val){
+  return opts.map(function(o){
+    var v=typeof o==='object'?o[0]:o;var l=typeof o==='object'?o[1]:o;
+    return '<option value="'+v+'"'+(v==val?' selected':'')+'>'+l+'</option>';
+  }).join('');
+}
+
+// ===== CHECKBOX HELPERS =====
+var VEHICLES = ['Boat','Bicycle','Motor Bike','Auto (Three-Wheeler)','Car','Van','Land Master','Tractor / Machine'];
+var FARM_ANIMALS = ['Goat','Cow','Buffalo','Hen / Chicken','Pigeon','Duck'];
+var AMENITIES = ['Toilet / Latrine','Electricity','Pipe Water Supply','Well Water','Brick / Concrete Wall','Tin / Wooden Wall'];
+
+function chkBoxes(items, prefix, saved){
+  var arr = saved || [];
+  return '<div class="chk-grid">'
+    + items.map(function(item){
+        var key = prefix + '_' + item.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+        var checked = arr.indexOf(item) > -1 ? 'checked' : '';
+        return '<label class="chk-item"><input type="checkbox" id="'+key+'" value="'+item+'" '+checked+'/> '+item+'</label>';
+      }).join('')
+    + '</div>';
+}
+
+function getChecked(prefix, items){
+  return items.filter(function(item){
+    var key = prefix + '_' + item.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+    var el = document.getElementById(key);
+    return el && el.checked;
+  });
+}
+
+// ===== RENDER FORM =====
+function renderForm(d){
+  editId=d?d.id:null;memberCount=0;var f=d||{};
+  document.getElementById('tab-add').innerHTML=
+    // --- Head of family ---
+    '<div class="card"><div class="card-title"><span style="font-size:15px">👤</span>'+(editId?'Edit':'Head of')+' family</div>'
+    +'<div class="form-grid">'
+    +'<div class="fg"><label>Full name *</label><input id="f-hn" value="'+(f.headName||'')+'" placeholder="Full name"/></div>'
+    +'<div class="fg"><label>NIC number *</label><input id="f-nic" value="'+(f.nic||'')+'" placeholder="e.g. 199012345678"/></div>'
+    +'<div class="fg"><label>Date of birth</label><input id="f-dob" value="'+(f.dob||'')+'" placeholder="YYYY-MM-DD"/></div>'
+    +'<div class="fg"><label>Phone</label><input id="f-ph" value="'+(f.phone||'')+'" placeholder="+94 77 xxx xxxx"/></div>'
+    +'<div class="fg"><label>Occupation</label><input id="f-job" value="'+(f.job||'')+'" placeholder="Job title"/></div>'
+    +'<div class="fg"><label>Employer</label><input id="f-emp" value="'+(f.employer||'')+'" placeholder="Company or place"/></div>'
+    +'<div class="fg"><label>Education</label><select id="f-edu">'+selOpts(eduOpts,f.edu)+'</select></div>'
+    +'<div class="fg"><label>Masjid</label><input id="f-msj" value="'+(f.masjid||'')+'" placeholder="Masjid name"/></div>'
+    +'<div class="fg full"><label>Address</label><input id="f-addr" value="'+(f.address||'')+'" placeholder="Home address"/></div>'
+    +'</div></div>'
+    // --- Spouse ---
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">💍</span> Spouse details</div>'
+    +'<div class="form-grid">'
+    +'<div class="fg"><label>Spouse name</label><input id="f-sn" value="'+(f.spouseName||'')+'" placeholder="Full name"/></div>'
+    +'<div class="fg"><label>Spouse NIC</label><input id="f-snic" value="'+(f.spouseNic||'')+'" placeholder="NIC number"/></div>'
+    +'<div class="fg"><label>Spouse occupation</label><input id="f-sj" value="'+(f.spouseJob||'')+'" placeholder="Job title"/></div>'
+    +'<div class="fg"><label>Spouse education</label><select id="f-se">'+selOpts(eduOpts,f.spouseEdu)+'</select></div>'
+    +'</div></div>'
+    // --- Members ---
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">👨‍👩‍👧</span> Family members</div>'
+    +'<div id="members-cont"></div>'
+    +'<button class="btn btn-s btn-sm" onclick="window.addMemberRow()">+ Add member</button>'
+    +'</div>'
+    // --- Financial ---
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">💰</span> Financial &amp; welfare</div>'
+    +'<div class="form-grid">'
+    +'<div class="fg"><label>Income level</label><select id="f-inc">'+selOpts([['','Select...'],['very-low','Very low (< 10k LKR)'],['low','Low (10k-30k LKR)'],['medium','Medium (30k-80k LKR)'],['high','High (> 80k LKR)']],f.income)+'</select></div>'
+    +'<div class="fg"><label>Housing</label><select id="f-hs">'+selOpts([['','Select...'],['own','Own house'],['rent','Rented'],['relative','With relatives'],['other','Other']],f.housing)+'</select></div>'
+    +'<div class="fg"><label>Aswesuma eligible?</label><select id="f-rat">'+selOpts([['false','No'],['true','Yes']],String(f.ration))+'</select></div>'
+    +'<div class="fg"><label>Zakat eligible?</label><select id="f-zak">'+selOpts([['false','No'],['true','Yes']],String(f.zakat))+'</select></div>'
+    // --- PENSION (NEW) ---
+    +'<div class="fg"><label>Pension?</label><select id="f-pension">'+selOpts([['false','No'],['true','Yes']],String(f.pension))+'</select></div>'
+    +'<div class="fg"><label>Pension details</label><input id="f-pensionNotes" value="'+(f.pensionNotes||'')+'" placeholder="Type, amount, etc."/></div>'
+    +'<div class="fg full"><label>Financial notes</label><textarea id="f-fn">'+(f.finNotes||'')+'</textarea></div>'
+    +'</div></div>'
+    // --- VEHICLES (NEW) ---
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">🚗</span> Vehicle details</div>'
+    +'<span class="section-label">Select all vehicles owned by this family</span>'
+    + chkBoxes(VEHICLES, 'veh', f.vehicles)
+    +'<div class="fg full" style="margin-top:10px"><label>Vehicle notes</label><input id="f-vehnotes" value="'+(f.vehicleNotes||'')+'" placeholder="e.g. registration numbers, condition..."/></div>'
+    +'</div>'
+    // --- FARM ANIMALS (NEW) ---
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">🐄</span> Farm animals</div>'
+    +'<span class="section-label">Select all farm animals owned by this family</span>'
+    + chkBoxes(FARM_ANIMALS, 'ani', f.farmAnimals)
+    +'<div class="fg full" style="margin-top:10px"><label>Animal notes</label><input id="f-aninotes" value="'+(f.animalNotes||'')+'" placeholder="e.g. number of each, purpose..."/></div>'
+    +'</div>'
+    // --- GENERAL AMENITIES (NEW) ---
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">🏠</span> General amenities</div>'
+    +'<span class="section-label">Select all available at this household</span>'
+    + chkBoxes(AMENITIES, 'ame', f.amenities)
+    +'<div class="fg full" style="margin-top:10px"><label>Amenity notes</label><input id="f-amenotes" value="'+(f.amenityNotes||'')+'" placeholder="Additional details..."/></div>'
+    +'</div>'
+    // --- Health ---
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">🏥</span> Health</div>'
+    +'<div class="form-grid">'
+    +'<div class="fg full"><label>Health conditions (head of family)</label><input id="f-hlt" value="'+(f.health||'')+'" placeholder="e.g. Diabetes, None"/></div>'
+    +'<div class="fg full"><label>Family health notes</label><textarea id="f-hln">'+(f.healthNotes||'')+'</textarea></div>'
+    +'<div class="fg"><label>Has disability?</label><select id="f-dis">'+selOpts([['false','No'],['true','Yes']],String(f.disability))+'</select></div>'
+    +'<div class="fg"><label>Disability details</label><input id="f-disn" value="'+(f.disabilityNotes||'')+'" placeholder="Details if applicable"/></div>'
+    +'</div></div>'
+    // --- Notes ---
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">📝</span> Notes</div>'
+    +'<div class="fg"><textarea id="f-notes" placeholder="Any other information...">'+(f.notes||'')+'</textarea></div>'
+    +'</div>'
+    +'<div class="btn-row" style="margin-bottom:20px">'
+    +'<button class="btn btn-p" onclick="window.saveFamily()">💾 '+(editId?'Update':'Save')+' record</button>'
+    +'<button class="btn btn-s" onclick="showTab(\'dashboard\')">Cancel</button>'
+    +'</div>';
+  if(d&&d.members)d.members.forEach(function(m){addMemberRow(m)});
+}
+
+function addMemberRow(d){
+  memberCount++;var i=memberCount;var m=d||{};
+  var rels=['Son','Daughter','Father','Mother','Brother','Sister','Grandson','Granddaughter','Other'];
+  var relSel=rels.map(function(r){return '<option'+(m.relation===r?' selected':'')+'>'+r+'</option>'}).join('');
+  var html='<div class="member-row" id="mr-'+i+'">'
+    +'<div class="ml">Member '+i+'</div>'
+    +'<button class="rm" onclick="document.getElementById(\'mr-'+i+'\').remove()">✕ Remove</button>'
+    +'<div class="form-grid">'
+    +'<div class="fg"><label>Name</label><input class="m-n" value="'+(m.name||'')+'" placeholder="Full name"/></div>'
+    +'<div class="fg"><label>NIC</label><input class="m-nic" value="'+(m.nic||'')+'" placeholder="NIC number"/></div>'
+    +'<div class="fg"><label>Relation</label><select class="m-r">'+relSel+'</select></div>'
+    +'<div class="fg"><label>Date of birth</label><input class="m-d" value="'+(m.dob||'')+'" placeholder="YYYY-MM-DD"/></div>'
+    +'<div class="fg"><label>Education</label><select class="m-e">'+selOpts(eduOpts,m.edu)+'</select></div>'
+    +'<div class="fg"><label>Occupation</label><input class="m-j" value="'+(m.job||'')+'" placeholder="Job / Student"/></div>'
+    +'<div class="fg"><label>Health</label><input class="m-h" value="'+(m.health||'')+'" placeholder="e.g. None, Asthma"/></div>'
+    +'</div></div>';
+  document.getElementById('members-cont').insertAdjacentHTML('beforeend',html);
+}
+window.addMemberRow=addMemberRow;
+
+function g(id){var el=document.getElementById(id);return el?el.value.trim():''}
+
+async function saveFamily(){
+  var nic=g('f-nic');var hn=g('f-hn');
+  if(!hn){toast('Please enter head of family name');return}
+  if(!nic){toast('Please enter NIC number');return}
+  if(!editId&&DB.find(function(f){return f.nic===nic})){toast('A family with this NIC already exists!');return}
+  var members=[];
+  document.querySelectorAll('#members-cont .member-row').forEach(function(row){
+    var n=row.querySelector('.m-n').value.trim();
+    if(n)members.push({name:n,nic:row.querySelector('.m-nic').value.trim(),relation:row.querySelector('.m-r').value,dob:row.querySelector('.m-d').value,edu:row.querySelector('.m-e').value,job:row.querySelector('.m-j').value,health:row.querySelector('.m-h').value});
+  });
+  var fam={
+    id:editId||Date.now().toString(),
+    headName:hn,nic:nic,dob:g('f-dob'),phone:g('f-ph'),job:g('f-job'),employer:g('f-emp'),
+    edu:document.getElementById('f-edu').value,masjid:g('f-msj'),address:g('f-addr'),
+    spouseName:g('f-sn'),spouseNic:g('f-snic'),spouseJob:g('f-sj'),spouseEdu:document.getElementById('f-se').value,
+    income:document.getElementById('f-inc').value,housing:document.getElementById('f-hs').value,
+    ration:document.getElementById('f-rat').value==='true',
+    zakat:document.getElementById('f-zak').value==='true',
+    pension:document.getElementById('f-pension').value==='true',
+    pensionNotes:g('f-pensionNotes'),
+    finNotes:g('f-fn'),
+    vehicles:getChecked('veh',VEHICLES),
+    vehicleNotes:g('f-vehnotes'),
+    farmAnimals:getChecked('ani',FARM_ANIMALS),
+    animalNotes:g('f-aninotes'),
+    amenities:getChecked('ame',AMENITIES),
+    amenityNotes:g('f-amenotes'),
+    health:g('f-hlt'),healthNotes:g('f-hln'),
+    disability:document.getElementById('f-dis').value==='true',
+    disabilityNotes:g('f-disn'),notes:g('f-notes'),members:members,
+    addedAt:editId?(DB.find(function(f){return f.id===editId})||{}).addedAt||new Date().toISOString():new Date().toISOString()
+  };
+  var btn=document.querySelector('.btn-p');if(btn){btn.textContent='Saving...';btn.disabled=true;}
+  var ok=await saveToFirebase(fam);
+  if(!ok){
+    var idx=DB.findIndex(function(f){return f.id===fam.id});
+    if(idx>-1)DB[idx]=fam;else DB.unshift(fam);
+  }
+  toast(editId?'Record updated!':'Family saved to Firebase!');
+  showTab('profile',fam.id);
+}
+window.saveFamily=saveFamily;
+
+var iLbl={'very-low':'Very low income',low:'Low income',medium:'Medium income',high:'High income'};
+var hLbl={own:'Own house',rent:'Rented',relative:'With relatives',other:'Other'};
+
+// ===== RENDER PROFILE =====
+function renderProfile(id){
+  var f=DB.find(function(x){return x.id===id});
+  if(!f){document.getElementById('tab-profile').innerHTML='<p style="padding:20px">Not found</p>';return}
+  var mems=(f.members||[]).map(function(m){
+    return '<div class="mc"><div class="av" style="width:32px;height:32px;font-size:12px">'+ini(m.name)+'</div>'
+      +'<div style="flex:1"><div class="mn">'+m.name+' <span style="font-size:11px;font-weight:400;color:var(--color-text-secondary)">('+m.relation+')</span></div>'
+      +'<div class="md">'+[m.edu,m.job,m.health&&m.health!=='None'?'⚕ '+m.health:''].filter(Boolean).join(' · ')+'</div>'
+      +(m.nic?'<div style="font-size:10px;color:var(--color-text-secondary);margin-top:1px">NIC: '+m.nic+'</div>':'')
+      +'</div></div>';
+  }).join('');
+
+  // Build vehicle pills
+  var vehs=(f.vehicles||[]).length
+    ? (f.vehicles||[]).map(function(v){return '<span class="tag tb">'+v+'</span>';}).join('')
+    : '<span style="color:var(--color-text-secondary);font-size:12px">None recorded</span>';
+
+  // Build farm animal pills
+  var anis=(f.farmAnimals||[]).length
+    ? (f.farmAnimals||[]).map(function(a){return '<span class="tag tg">'+a+'</span>';}).join('')
+    : '<span style="color:var(--color-text-secondary);font-size:12px">None recorded</span>';
+
+  // Build amenity pills
+  var ames=(f.amenities||[]).length
+    ? (f.amenities||[]).map(function(a){return '<span class="tag ta">'+a+'</span>';}).join('')
+    : '<span style="color:var(--color-text-secondary);font-size:12px">None recorded</span>';
+
+  document.getElementById('tab-profile').innerHTML=
+    '<button class="back-btn" onclick="showTab(\'dashboard\')">← Back</button>'
+    +'<div class="ph">'
+    +'<div class="av" style="width:54px;height:54px;font-size:20px;background:rgba(255,255,255,0.2);color:white">'+ini(f.headName)+'</div>'
+    +'<div style="flex:1"><h2>'+f.headName+'</h2><p>NIC: '+f.nic+(f.masjid?' · '+f.masjid:'')+'</p>'+(f.phone?'<p>'+f.phone+'</p>':'')+'</div>'
+    +'<div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">'
+    +(f.ration?'<span class="rb ry">✓ Ration eligible</span>':'<span class="rb rn">Not on ration list</span>')
+    +(f.zakat?'<span class="rb" style="background:rgba(255,255,255,0.2);color:white">Zakat eligible</span>':'')
+    +(f.pension?'<span class="rb" style="background:rgba(255,255,255,0.2);color:white">Pension recipient</span>':'')
+    +'</div></div>'
+
+    // Personal info
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">👤</span> Personal information</div>'
+    +'<div class="ig">'
+    +'<div class="ii"><div class="il">Date of birth</div><div class="iv">'+(f.dob||'—')+'</div></div>'
+    +'<div class="ii"><div class="il">Education</div><div class="iv">'+(f.edu||'—')+'</div></div>'
+    +'<div class="ii"><div class="il">Occupation</div><div class="iv">'+(f.job||'—')+'</div></div>'
+    +'<div class="ii"><div class="il">Employer</div><div class="iv">'+(f.employer||'—')+'</div></div>'
+    +'<div class="ii" style="grid-column:1/-1"><div class="il">Address</div><div class="iv">'+(f.address||'—')+'</div></div>'
+    +'</div></div>'
+
+    // Spouse
+    +(f.spouseName?'<div class="card"><div class="card-title"><span style="font-size:15px">💍</span> Spouse</div>'
+    +'<div class="ig">'
+    +'<div class="ii"><div class="il">Name</div><div class="iv">'+f.spouseName+'</div></div>'
+    +(f.spouseNic?'<div class="ii"><div class="il">NIC</div><div class="iv">'+f.spouseNic+'</div></div>':'')
+    +'<div class="ii"><div class="il">Occupation</div><div class="iv">'+(f.spouseJob||'—')+'</div></div>'
+    +'<div class="ii"><div class="il">Education</div><div class="iv">'+(f.spouseEdu||'—')+'</div></div>'
+    +'</div></div>':'')
+
+    // Members
+    +(mems?'<div class="card"><div class="card-title"><span style="font-size:15px">👨‍👩‍👧</span> Family members ('+(f.members||[]).length+')</div>'+mems+'</div>':'')
+
+    // Financial
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">💰</span> Financial status</div>'
+    +'<div class="ig">'
+    +'<div class="ii"><div class="il">Income level</div><div class="iv">'+(iLbl[f.income]||'—')+'</div></div>'
+    +'<div class="ii"><div class="il">Housing</div><div class="iv">'+(hLbl[f.housing]||'—')+'</div></div>'
+    +'<div class="ii"><div class="il">Aswesuma</div><div class="iv">'+(f.ration?'Eligible':'Not eligible')+'</div></div>'
+    +'<div class="ii"><div class="il">Zakat</div><div class="iv">'+(f.zakat?'Eligible':'Not eligible')+'</div></div>'
+    +'<div class="ii"><div class="il">Pension</div><div class="iv">'+(f.pension?'Yes':'No')+(f.pensionNotes?' — '+f.pensionNotes:'')+'</div></div>'
+    +'</div>'+(f.finNotes?'<p style="font-size:12px;color:var(--color-text-secondary);margin-top:8px">'+f.finNotes+'</p>':'')+'</div>'
+
+    // Vehicles (NEW)
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">🚗</span> Vehicles</div>'
+    +'<div class="tags" style="margin-bottom:6px">'+vehs+'</div>'
+    +(f.vehicleNotes?'<p style="font-size:12px;color:var(--color-text-secondary);margin-top:6px">'+f.vehicleNotes+'</p>':'')
+    +'</div>'
+
+    // Farm Animals (NEW)
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">🐄</span> Farm animals</div>'
+    +'<div class="tags" style="margin-bottom:6px">'+anis+'</div>'
+    +(f.animalNotes?'<p style="font-size:12px;color:var(--color-text-secondary);margin-top:6px">'+f.animalNotes+'</p>':'')
+    +'</div>'
+
+    // Amenities (NEW)
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">🏠</span> General amenities</div>'
+    +'<div class="tags" style="margin-bottom:6px">'+ames+'</div>'
+    +(f.amenityNotes?'<p style="font-size:12px;color:var(--color-text-secondary);margin-top:6px">'+f.amenityNotes+'</p>':'')
+    +'</div>'
+
+    // Health
+    +'<div class="card"><div class="card-title"><span style="font-size:15px">🏥</span> Health</div>'
+    +'<div class="ig">'
+    +'<div class="ii"><div class="il">Conditions</div><div class="iv">'+(f.health||'None reported')+'</div></div>'
+    +'<div class="ii"><div class="il">Disability</div><div class="iv">'+(f.disability?(f.disabilityNotes||'Yes'):'No')+'</div></div>'
+    +'</div>'+(f.healthNotes?'<p style="font-size:12px;color:var(--color-text-secondary);margin-top:8px">'+f.healthNotes+'</p>':'')+'</div>'
+
+    // Notes
+    +(f.notes?'<div class="card"><div class="card-title"><span style="font-size:15px">📝</span> Notes</div><p style="font-size:13px">'+f.notes+'</p></div>':'')
+
+    +'<div class="btn-row" style="margin-bottom:20px">'
+    +'<button class="btn btn-p" onclick="window.editFamily(\''+f.id+'\')">✏️ Edit</button>'
+    +'<button class="btn btn-d" onclick="window.delFamily(\''+f.id+'\')">🗑 Delete</button>'
+    +'</div>';
+}
+
+window.editFamily=function(id){
+  var f=DB.find(function(x){return x.id===id});if(!f)return;
+  document.querySelectorAll('.nav-tab').forEach(function(t,i){t.classList.toggle('active',i===2)});
+  document.querySelectorAll('#app-screen .page').forEach(function(p){p.classList.remove('active')});
+  document.getElementById('tab-add').classList.add('active');
+  renderForm(f);
+};
+
+window.delFamily=async function(id){
+  if(!confirm('Delete this family record? This cannot be undone.'))return;
+  await deleteFromFirebase(id);
+  DB=DB.filter(function(f){return f.id!==id});
+  toast('Record deleted from Firebase');
+  showTab('dashboard');
+};
+
+function renderAswesuma(){
+  var elig=DB.filter(function(f){return f.ration});
+  document.getElementById('tab-aswesuma').innerHTML=
+    '<div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px">'
+    +'<div class="card-title" style="margin:0"><span style="font-size:15px">📦</span> Aswesuma recipient families</div>'
+    +'<span style="font-size:13px;font-weight:500;color:#1a472a">'+elig.length+' families</span>'
+    +'</div>'
+    +(elig.length?elig.map(function(f,i){
+      var mc=1+(f.members||[]).length;
+      return '<div class="fi" onclick="showTab(\'profile\',\''+f.id+'\')">'
+        +'<span style="font-size:12px;font-weight:500;color:var(--color-text-secondary);width:20px;text-align:center">'+(i+1)+'</span>'
+        +'<div class="av" style="width:42px;height:42px;font-size:15px">'+ini(f.headName)+'</div>'
+        +'<div style="flex:1"><div class="fn">'+f.headName+'</div>'
+        +'<div class="fnic">NIC: '+f.nic+' · '+(f.address||'No address')+'</div>'
+        +'<div class="tags">'
+        +(f.income==='very-low'?'<span class="tag tr">Very low income</span>':f.income==='low'?'<span class="tag ta">Low income</span>':'')
+        +'<span class="tag tg">'+mc+' member'+(mc>1?'s':'')+'</span>'
+        +'</div></div></div>';
+    }).join('')
+    :'<div class="empty"><div class="ei">📦</div><p>No families marked as Aswesuma eligible yet.</p></div>');
+}
+</script>
+</body>
+</html>
